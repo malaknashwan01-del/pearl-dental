@@ -116,7 +116,7 @@ export interface Keyframe {
 // الأقسام بالترتيب: الواجهة، العلاجات، الأطباء، طريقة الحجز، التواصل
 // s: 0 يعني السن بيصغر لحد ما يختفي (عند الأطباء ما بيغطي صورهم)
 const DESKTOP: Keyframe[] = [
-  { x: 0.06, y: -0.4, s: 0.72, yaw: 20, pitch: 6, roll: -6 },
+  { x: 0.75, y: 0.55, s: 0, yaw: 20, pitch: 6, roll: -6 },
   { x: -0.62, y: -0.42, s: 0.62, yaw: 110, pitch: 10, roll: 8 },
   { x: -0.1, y: 0.1, s: 0, yaw: 200, pitch: -8, roll: -10 },
   { x: 0.5, y: -0.02, s: 1.0, yaw: 300, pitch: 8, roll: 6 },
@@ -125,7 +125,7 @@ const DESKTOP: Keyframe[] = [
 
 // على الموبايل المحتوى بعرض الشاشة كله، فالسن بالواجهة بس
 const MOBILE: Keyframe[] = [
-  { x: 0.42, y: -0.62, s: 0.42, yaw: 20, pitch: 6, roll: -6 },
+  { x: 0.42, y: -0.62, s: 0, yaw: 20, pitch: 6, roll: -6 },
   { x: 0.5, y: -0.2, s: 0, yaw: 110, pitch: 10, roll: 8 },
   { x: 0.2, y: 0.0, s: 0, yaw: 220, pitch: -8, roll: -10 },
   { x: 0.2, y: 0.0, s: 0, yaw: 320, pitch: 8, roll: 6 },

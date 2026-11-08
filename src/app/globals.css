@@ -20,6 +20,7 @@
   --color-warn: #b45309;
   --color-error: #c2364a;
   --font-sans: "Alexandria Variable", system-ui, sans-serif;
+  --font-script: "Aref Ruqaa", "Pinyon Script", cursive;
   --radius-card: 1.25rem;
 }
 
@@ -131,6 +132,47 @@ body {
   }
 }
 
+/* ---------------- غلاف الواجهة ---------------- */
+.cover-in {
+  opacity: 0;
+  transform: translateY(var(--from, 40px));
+}
+.loaded .cover-in {
+  animation: cover-in 1.2s var(--delay, 0s) cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+}
+@keyframes cover-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[dir="ltr"] .script-word {
+  font-family: "Pinyon Script", cursive;
+  font-weight: 400;
+}
+
+/* الدائرة المرسومة باليد حوالين "احجز موعدك" */
+.hand-circle path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.1s 0.35s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.in .hand-circle path,
+.hand-circle.in path {
+  stroke-dashoffset: 0;
+}
+.wiggle:hover {
+  animation: wiggle 0.5s ease;
+}
+@keyframes wiggle {
+  25% {
+    transform: rotate(-2deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
 /* ---------------- شريط الصور المتحرك ---------------- */
 .band-row {
   display: flex;
@@ -169,6 +211,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .hero-line > span,
+  .cover-in,
   .wipe {
     opacity: 1 !important;
     transform: none !important;
@@ -178,6 +221,10 @@ body {
   }
   #tooth {
     transition: none;
+  }
+  .hand-circle path {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
   }
   html {
     scroll-behavior: auto;

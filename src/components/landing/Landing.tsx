@@ -26,7 +26,7 @@ function useOpenStatus(lang: Locale, t: Dictionary) {
     const update = () => {
       const now = clinicParts(new Date());
       const fmt = (h: number) =>
-        new Intl.DateTimeFormat(intlLocale(lang), { hour: "numeric", minute: "2-digit", timeZone: "UTC" }).format(
+        new Intl.DateTimeFormat(intlLocale(lang), { hour: "numeric", minute: "2-digit", timeZone: "UTC", hour12: lang === "en" ? true : undefined }).format(
           new Date(Date.UTC(2026, 0, 1, h))
         );
       const open = now.weekday !== FRIDAY && now.minutes >= OPEN && now.minutes < CLOSE;
@@ -104,78 +104,11 @@ function Header({ lang, t }: { lang: Locale; t: Dictionary }) {
   );
 }
 
-/* ---------- الواجهة ---------- */
+/* ---------- الواجهة: غلاف بطبقات ----------
+ * من ورا لقدام: الكلمة الضخمة ← الدكتورة المقصوصة ← الكلمة بخط اليد ← شريط صور العيادة
+ */
 
-function Hero({ lang, t, photo }: { lang: Locale; t: Dictionary; photo?: string }) {
-  const status = useOpenStatus(lang, t);
-  return (
-    <section id="top" className="relative pt-16" data-tooth>
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-14 pt-8 sm:px-8 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pb-16">
-        <div className="relative z-20">
-          <p
-            className={`mb-6 inline-flex h-8 items-center gap-2 rounded-full border border-line bg-card px-3.5 text-[13px] font-medium transition-opacity duration-500 ${
-              status ? "opacity-100" : "opacity-0"
-            }`}
-            aria-live="polite"
-          >
-            <span className={`h-2 w-2 rounded-full ${status?.open ? "bg-ok" : "bg-warn"}`} />
-            {status?.text ?? " "}
-          </p>
-          <h1 className="text-[clamp(42px,5.2vw,80px)] font-bold leading-[1.08] tracking-tight rtl:leading-[1.28]">
-            <span className="hero-line">
-              <span>{t.hero.line1}</span>
-            </span>
-            <span className="hero-line">
-              <span className="text-blue">{t.hero.line2}</span>
-            </span>
-          </h1>
-          <p className="reveal in mt-6 max-w-[34rem] text-[clamp(16px,1.35vw,19px)] leading-relaxed text-muted" style={{ "--delay": "350ms" } as React.CSSProperties}>
-            {t.hero.lead}
-          </p>
-          <div className="reveal in mt-9 flex flex-wrap items-center gap-3" style={{ "--delay": "480ms" } as React.CSSProperties}>
-            <Link
-              href={`/${lang}/book`}
-              className="group inline-flex items-center gap-2.5 rounded-full bg-blue px-7 py-3.5 font-semibold text-white transition-colors hover:bg-blue-dark"
-            >
-              {t.hero.cta}
-              <Arrow className="h-4 w-4 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-            </Link>
-            <a
-              href={`tel:${t.footer.phone.replace(/\s/g, "")}`}
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-6 py-3.5 font-semibold hover:border-ink"
-            >
-              <Phone />
-              {t.hero.call}
-            </a>
-          </div>
-          <ul className="reveal in mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted" style={{ "--delay": "600ms" } as React.CSSProperties}>
-            {t.hero.facts.map((f) => (
-              <li key={f} className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-pink" />
-                {f}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="wipe relative aspect-[4/5] w-full overflow-hidden rounded-[28px] bg-sky max-lg:mx-auto max-lg:max-w-md lg:max-h-[78vh] lg:justify-self-end">
-          {photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={photo} alt={t.hero.photoAlt} className="h-full w-full object-cover" fetchPriority="high" />
-          ) : (
-            <div className="absolute inset-0 bg-[linear-gradient(160deg,#eef5fd_0%,#dbe9f8_100%)]" aria-hidden="true">
-              <div className="absolute inset-x-0 bottom-0 h-[9%] bg-[repeating-linear-gradient(-28deg,#ffffff_0_14px,#1f5fd6_14px_20px,#ffffff_20px_30px,#e8588c_30px_33px)] opacity-70" />
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- شريط الصور المتحرك ---------- */
-
-function GalleryBand({ t, photos }: { t: Dictionary; photos: { src: string; caption: string }[] }) {
+function CoverBand({ photos, label }: { photos: { src: string; caption: string }[]; label: string }) {
   const rowRef = useRef<HTMLDivElement>(null);
   const hover = useRef(false);
 
@@ -190,10 +123,12 @@ function GalleryBand({ t, photos }: { t: Dictionary; photos: { src: string; capt
     const tick = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      // بيبطّئ لما الماوس فوقه، وبيرجع لسرعته بنعومة
-      speed += ((hover.current ? 0.18 : 1) - speed) * Math.min(1, dt * 3);
+      // كرت كل ~2 ثانية، وبيبطّئ لحد ما يوقف تقريباً لما الماوس فوقه
+      speed += ((hover.current ? 0.22 : 1) - speed) * Math.min(1, dt * 3);
+      const card = row.firstElementChild as HTMLElement | null;
+      const unit = card ? card.offsetWidth + 8 : 200;
       const loop = row.scrollWidth / 2;
-      off = (off + 48 * speed * dt) % loop;
+      off = (off + (unit / 2.05) * speed * dt) % loop;
       row.style.transform = `translate3d(${rtl ? off : -off}px,0,0)`;
       frame = requestAnimationFrame(tick);
     };
@@ -204,24 +139,135 @@ function GalleryBand({ t, photos }: { t: Dictionary; photos: { src: string; capt
   const items = [...photos, ...photos];
   return (
     <div
-      className="overflow-hidden border-y border-line bg-card py-3"
-      aria-label={t.gallery.label}
+      className="cover-in absolute inset-x-0 top-[57%] z-[4] h-[21%] overflow-hidden sm:top-[52%] sm:h-[26%]"
+      style={{ "--delay": "0.55s", "--from": "0px" } as React.CSSProperties}
       role="region"
+      aria-label={label}
       onMouseEnter={() => (hover.current = true)}
       onMouseLeave={() => (hover.current = false)}
     >
-      <div ref={rowRef} className="band-row">
+      <div ref={rowRef} className="band-row h-full !gap-2">
         {items.map((p, i) => (
-          <figure key={i} className="relative h-[200px] w-[200px] shrink-0 overflow-hidden rounded-2xl sm:h-[260px] sm:w-[260px]" aria-hidden={i >= photos.length}>
+          <figure key={i} className="group relative aspect-square h-full shrink-0 overflow-hidden rounded-[10px]" aria-hidden={i >= photos.length}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.src} alt={i < photos.length ? p.caption : ""} loading="lazy" className="h-full w-full object-cover" draggable={false} />
-            <figcaption className="absolute bottom-2.5 start-2.5 rounded-full bg-card/90 px-3 py-1 text-xs font-medium backdrop-blur">
+            <img src={p.src} alt={i < photos.length ? p.caption : ""} loading={i < 6 ? "eager" : "lazy"} className="h-full w-full object-cover" draggable={false} />
+            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-3 pb-2.5 pt-8 text-[13px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
               {p.caption}
             </figcaption>
           </figure>
         ))}
       </div>
     </div>
+  );
+}
+
+function Hero({ lang, t, photos }: { lang: Locale; t: Dictionary; photos: Photos }) {
+  const status = useOpenStatus(lang, t);
+  const c = t.hero.cover;
+  const band = t.gallery.captions
+    .map((caption, i) => ({ caption, src: photos[`gallery-${i + 1}`] }))
+    .filter((g): g is { caption: string; src: string } => Boolean(g.src));
+  const side = "text-[clamp(15px,1.55vw,24px)] font-light leading-[1.2] text-white";
+
+  return (
+    <section
+      id="top"
+      className="relative h-[max(100svh,640px)] overflow-hidden bg-[#9fbfe6] text-white"
+      data-tooth
+    >
+      {/* ضوء ناعم من فوق، زي خلفية الاستوديو */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(255,255,255,0.28),transparent_60%)]" aria-hidden="true" />
+
+      <h1 className="sr-only">
+        Pearl Dental — {c.word} {c.script}
+      </h1>
+
+      {/* 1) الكلمة الضخمة — ورا الدكتورة */}
+      <p
+        aria-hidden="true"
+        className="cover-in pointer-events-none absolute inset-x-0 top-[13%] z-[1] select-none whitespace-nowrap text-center font-bold leading-none tracking-tight sm:top-[9%]"
+        style={{ fontSize: "clamp(92px, 21vw, 340px)", "--delay": "0.05s", "--from": "60px" } as React.CSSProperties}
+      >
+        {c.word}
+      </p>
+
+      {/* 2) الدكتورة مقصوصة */}
+      {photos["hero-doctor"] && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={photos["hero-doctor"]}
+          alt={c.doctorAlt}
+          fetchPriority="high"
+          draggable={false}
+          className="cover-in absolute bottom-0 left-1/2 z-[2] h-[64%] w-auto max-w-none -translate-x-1/2 select-none object-contain sm:h-[82%]"
+          style={{ "--delay": "0.2s", "--from": "50px", translate: "-50% 0" } as React.CSSProperties}
+        />
+      )}
+
+      {/* 3) الكلمة بخط اليد — قدامها */}
+      <p
+        aria-hidden="true"
+        className="script-word cover-in pointer-events-none absolute end-[4%] top-[35%] z-[3] select-none whitespace-nowrap leading-none text-[#173f8c] sm:end-[22%] sm:top-[31%]"
+        style={{ fontFamily: "var(--font-script)", fontSize: "clamp(54px, 9vw, 150px)", "--delay": "0.45s", "--from": "24px", rotate: "-7deg" } as React.CSSProperties}
+      >
+        {c.script}
+      </p>
+
+      {/* 4) شريط صور العيادة — بيمر من قدامها */}
+      {band.length >= 4 && <CoverBand photos={band} label={t.gallery.label} />}
+
+      {/* النصوص الصغيرة على الجوانب */}
+      <div className="absolute inset-x-4 top-20 z-[5] flex items-start justify-between sm:inset-x-8 sm:top-24">
+        <p
+          className={`cover-in inline-flex h-8 items-center gap-2 rounded-full bg-white/90 px-3.5 text-[13px] font-medium text-ink transition-opacity duration-500 ${
+            status ? "" : "!opacity-0"
+          }`}
+          style={{ "--delay": "0.7s", "--from": "10px" } as React.CSSProperties}
+          aria-live="polite"
+        >
+          <span className={`h-2 w-2 rounded-full ${status?.open ? "bg-ok" : "bg-warn"}`} />
+          {status?.text ?? " "}
+        </p>
+      </div>
+
+      <p className={`cover-in absolute start-[5%] top-[40%] z-[5] hidden lg:block ${side}`} style={{ "--delay": "0.8s", "--from": "16px" } as React.CSSProperties}>
+        {c.side1.map((l) => (
+          <span key={l} className="block">{l}</span>
+        ))}
+      </p>
+
+      {/* تحت: الأزرار والسهم */}
+      <div className="absolute inset-x-4 bottom-5 z-[5] flex items-end justify-between gap-4 sm:inset-x-8 sm:bottom-8">
+        <div className="cover-in flex flex-wrap gap-2.5" style={{ "--delay": "0.9s", "--from": "16px" } as React.CSSProperties}>
+          <Link
+            href={`/${lang}/book`}
+            className="group inline-flex items-center gap-2.5 rounded-full bg-white px-6 py-3.5 font-semibold text-ink shadow-[0_10px_30px_-12px_rgba(15,29,43,0.5)] transition-colors hover:bg-ink hover:text-white"
+          >
+            {t.hero.cta}
+            <Arrow className="h-4 w-4 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+          </Link>
+          <a
+            href={`tel:${t.footer.phone.replace(/\s/g, "")}`}
+            className="hidden items-center gap-2 rounded-full border border-white/70 px-5 py-3.5 font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:inline-flex"
+          >
+            <Phone />
+            {t.hero.call}
+          </a>
+        </div>
+        <div className="flex items-end gap-6">
+          <p className={`cover-in hidden text-end lg:block ${side}`} style={{ "--delay": "0.85s", "--from": "16px" } as React.CSSProperties}>
+            {c.side2.map((l) => (
+              <span key={l} className="block">{l}</span>
+            ))}
+          </p>
+          <a href="#services" aria-label={c.scroll} className="cover-in hidden w-[clamp(64px,8vw,120px)] text-white/90 hover:text-white sm:block" style={{ "--delay": "1s", "--from": "0px" } as React.CSSProperties}>
+            <svg viewBox="0 0 100 40" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-full rotate-90" aria-hidden="true">
+              <path d="M0 20H96M78 4l18 16-18 16" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -523,8 +569,27 @@ function Footer({ lang, t }: { lang: Locale; t: Dictionary }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-12">
           <h2 className="reveal max-w-xl text-[clamp(32px,4vw,60px)] font-bold leading-tight tracking-tight rtl:leading-snug">{t.footer.title}</h2>
-          <Link href={`/${lang}/book`} className="reveal inline-flex items-center gap-2.5 rounded-full bg-blue px-7 py-3.5 font-semibold text-white hover:bg-blue-dark">
-            {t.nav.cta} <Arrow />
+          {/* دائرة مرسومة باليد بترسم حالها لما توصلها */}
+          <Link href={`/${lang}/book`} className="reveal group relative me-[6%] inline-block py-2" style={{ "--delay": "120ms" } as React.CSSProperties}>
+            <span className="wiggle relative inline-block text-[clamp(28px,3.4vw,52px)] font-light text-ink">
+              {t.footer.circle}
+              <svg
+                viewBox="0 0 200 80"
+                preserveAspectRatio="none"
+                className="hand-circle pointer-events-none absolute -start-[20%] -top-[62%] h-[220%] w-[150%] overflow-visible rtl:-scale-x-100"
+                aria-hidden="true"
+              >
+                <path
+                  pathLength={1}
+                  d="M150 14C112 2 34 6 12 30c-18 20 22 38 82 38 62 0 104-12 102-32C194 16 140 8 96 10 58 12 28 20 22 28"
+                  fill="none"
+                  stroke="#1F5FD6"
+                  strokeWidth="3.2"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
+            </span>
           </Link>
         </div>
         <div className="grid gap-10 py-12 text-[15px] sm:grid-cols-2 lg:grid-cols-4">
@@ -571,10 +636,6 @@ export default function Landing({ lang, photos }: { lang: Locale; photos: Photos
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [toothReady, setToothReady] = useState(false);
-
-  const gallery = t.gallery.captions
-    .map((caption, i) => ({ caption, src: photos[`gallery-${i + 1}`] }))
-    .filter((g): g is { caption: string; src: string } => Boolean(g.src));
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setLoaded(true));
@@ -631,8 +692,7 @@ export default function Landing({ lang, photos }: { lang: Locale; photos: Photos
       <Header lang={lang} t={t} />
       <canvas ref={canvasRef} id="tooth" className={toothReady ? "ready" : ""} aria-hidden="true" />
       <main id="main">
-        <Hero lang={lang} t={t} photo={photos.hero} />
-        {gallery.length >= 4 && <GalleryBand t={t} photos={gallery} />}
+        <Hero lang={lang} t={t} photos={photos} />
         <Services lang={lang} t={t} />
         <Doctors lang={lang} t={t} photos={photos} />
         <How lang={lang} t={t} />

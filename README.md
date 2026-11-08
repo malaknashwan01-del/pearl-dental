@@ -56,7 +56,8 @@ Put photos in `public/photos/`. Anything missing falls back to a neutral placeho
 |------|----------|
 | `hero.jpg` | Hero image |
 | `dr-sara.jpg`, `dr-laith.jpg`, `dr-rana.jpg`, `dr-yousef.jpg` | Doctor portraits (4:5) |
-| `gallery-1.jpg` … `gallery-8.jpg` | Moving photo band (square) |
+| `gallery-1.jpg` … `gallery-8.jpg` | Photo band crossing the hero (square) |
+| `hero-doctor.webp` | Cut-out doctor for the layered hero (transparent) |
 
 ## Deploy on Vercel
 

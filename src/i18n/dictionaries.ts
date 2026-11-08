@@ -30,6 +30,15 @@ const ar = {
     call: "اتصل بالعيادة",
     facts: ["4 تخصصات", "أشعة رقمية بجرعة منخفضة", "تعقيم كامل بعد كل مريض"],
     photoAlt: "غرفة العلاج في عيادة Pearl Dental",
+    cover: {
+      word: "ابتسامة",
+      script: "تليق بك",
+      side1: ["نفحصك،", "ونشرح لك،", "ثم نبدأ."],
+      side2: ["أسعار", "مكتوبة", "قبل أي علاج."],
+      note: "4 أطباء متخصصين · شارع عمر المختار",
+      doctorAlt: "د. سارة الخطيب، أخصائية تقويم الأسنان",
+      scroll: "انزل للأسفل",
+    },
   },
   gallery: {
     label: "من داخل العيادة",
@@ -79,6 +88,7 @@ const ar = {
   },
   footer: {
     title: "نراك في العيادة",
+    circle: "احجز موعدك",
     visit: "العنوان",
     address: "شارع عمر المختار، الطابق الثاني",
     hours: "ساعات العمل",
@@ -129,6 +139,15 @@ const en: Dictionary = {
     call: "Call the clinic",
     facts: ["4 specialties", "Low-dose digital X-rays", "Full sterilisation after every patient"],
     photoAlt: "The treatment room at Pearl Dental",
+    cover: {
+      word: "Smile",
+      script: "made for you",
+      side1: ["We examine,", "explain,", "then begin."],
+      side2: ["Prices", "in writing,", "up front."],
+      note: "4 specialist dentists · Omar Al-Mukhtar St",
+      doctorAlt: "Dr. Sara Al-Khatib, orthodontist",
+      scroll: "Scroll down",
+    },
   },
   gallery: {
     label: "Inside the clinic",
@@ -178,6 +197,7 @@ const en: Dictionary = {
   },
   footer: {
     title: "See you at the clinic",
+    circle: "Book your visit",
     visit: "Address",
     address: "Omar Al-Mukhtar St, 2nd floor",
     hours: "Opening hours",

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import "@fontsource-variable/alexandria";
+import "@fontsource/aref-ruqaa/arabic-700.css";
+import "@fontsource/pinyon-script/400.css";
 import "../globals.css";
 import { LOCALES, dirOf, hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
