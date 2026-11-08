@@ -17,5 +17,5 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // كل الروابط ما عدا ملفات Next الداخلية والملفات العامة (اللي فيها نقطة زي icon.svg)
-  matcher: ["/((?!_next|.*\\..*).*)"],
+  matcher: ["/((?!_next|api|.*\\..*).*)"],
 };

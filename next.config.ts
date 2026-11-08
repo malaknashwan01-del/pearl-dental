@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // قاعدة البيانات المدمجة (للتطوير) ما بتنضغط مع باقي الكود
+  serverExternalPackages: ["@electric-sql/pglite", "pg"],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
