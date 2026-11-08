@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pearl Dental 🦷
 
-## Getting Started
+A bilingual (Arabic / English) landing page for a dental clinic, with a glossy 3D tooth that flies through the page as you scroll.
 
-First, run the development server:
+**Live demo:** _add your Vercel link here_
+
+## Highlights
+
+- **Procedural 3D tooth** built in three.js from a signed distance function (crown, cusps and three roots blended smoothly) and turned into a mesh with marching cubes, so there is no heavy model file to download
+- **Pearl enamel material**: clearcoat, sheen and a subtle iridescence, lit with blue and pink rim lights in the brand colors
+- **Scroll-driven flight path**: the tooth eases between a resting spot in each section, dips mid-flight, banks with its velocity and leans toward the cursor, with orbiting bubbles and twinkling sparkles
+- **Arabic first, fully RTL**: layout built with CSS logical properties, so the page, decorations and flight path all mirror automatically for Arabic
+- **Toothpaste palette**: blue, aqua and pink stripes on white, with hand-drawn SVG decorations (toothpaste swirl, tube, bubbles, toothbrush) and parallax
+- **Accessible and light**: respects reduced-motion settings, skip link, keyboard focus styles; three.js is lazy-loaded after the page appears, and the page still works without WebGL
+
+## Tech
+
+Next.js 16 (App Router, static pages per language) · React 19 · TypeScript · Tailwind CSS v4 · three.js · self-hosted Alexandria font
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Visiting `/` redirects to `/ar` (or `/en` for English browsers).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/[lang]/        Layout and page for each language (ar, en)
+├── components/landing/
+│   ├── Landing.tsx     Sections, parallax, reveal animations
+│   ├── toothScene.ts   The 3D tooth, scene and flight path
+│   └── Decor.tsx       SVG decorations and logo
+├── i18n/               Arabic and English copy
+└── proxy.ts            Redirects to the visitor's language
+```
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
+- Online booking: pick a treatment, dentist and free time slot
+- Patient accounts with upcoming appointments
+- Clinic dashboard with daily schedule
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The clinic, team and contact details are fictional; this is a portfolio project.
