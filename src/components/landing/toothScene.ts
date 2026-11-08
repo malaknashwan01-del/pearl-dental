@@ -113,20 +113,23 @@ export interface Keyframe {
   roll: number;
 }
 
+// الأقسام بالترتيب: الواجهة، العلاجات، الأطباء، طريقة الحجز، التواصل
+// s: 0 يعني السن بيصغر لحد ما يختفي (عند الأطباء ما بيغطي صورهم)
 const DESKTOP: Keyframe[] = [
-  { x: 0.0, y: -0.16, s: 1.0, yaw: 20, pitch: 6, roll: -6 }, // الواجهة
-  { x: -0.3, y: -0.06, s: 0.95, yaw: 110, pitch: 10, roll: 8 }, // خدماتنا
-  { x: 0.26, y: -0.24, s: 1.0, yaw: 220, pitch: -8, roll: -10 }, // الحجز
-  { x: -0.24, y: 0.0, s: 0.92, yaw: 320, pitch: 8, roll: 6 }, // أطباؤنا
-  { x: 0.0, y: -0.14, s: 0.9, yaw: 380, pitch: 4, roll: 0 }, // التواصل
+  { x: 0.06, y: -0.4, s: 0.72, yaw: 20, pitch: 6, roll: -6 },
+  { x: -0.62, y: -0.42, s: 0.62, yaw: 110, pitch: 10, roll: 8 },
+  { x: -0.1, y: 0.1, s: 0, yaw: 200, pitch: -8, roll: -10 },
+  { x: 0.5, y: -0.02, s: 1.0, yaw: 300, pitch: 8, roll: 6 },
+  { x: 0.55, y: 0.3, s: 0, yaw: 380, pitch: 4, roll: 0 },
 ];
 
+// على الموبايل المحتوى بعرض الشاشة كله، فالسن بالواجهة بس
 const MOBILE: Keyframe[] = [
-  { x: 0.0, y: -0.04, s: 0.78, yaw: 20, pitch: 6, roll: -6 },
-  { x: 0.12, y: 0.16, s: 0.7, yaw: 110, pitch: 10, roll: 8 },
-  { x: 0.2, y: -0.22, s: 0.72, yaw: 220, pitch: -8, roll: -10 },
-  { x: 0.22, y: 0.28, s: 0.66, yaw: 320, pitch: 8, roll: 6 },
-  { x: 0.0, y: 0.2, s: 0.56, yaw: 380, pitch: 4, roll: 0 },
+  { x: 0.42, y: -0.62, s: 0.42, yaw: 20, pitch: 6, roll: -6 },
+  { x: 0.5, y: -0.2, s: 0, yaw: 110, pitch: 10, roll: 8 },
+  { x: 0.2, y: 0.0, s: 0, yaw: 220, pitch: -8, roll: -10 },
+  { x: 0.2, y: 0.0, s: 0, yaw: 320, pitch: 8, roll: 6 },
+  { x: 0.0, y: 0.0, s: 0, yaw: 380, pitch: 4, roll: 0 },
 ];
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
@@ -362,7 +365,9 @@ export function createToothScene(canvas: HTMLCanvasElement, opts: ToothSceneOpti
       cur.y * halfH + hover * halfH * 0.5 + mouse.sy * 0.08,
       Math.sin(t * 0.9) * 0.15
     );
-    flight.scale.setScalar(halfH * 2 * 0.3 * cur.s);
+    // لما يصغر لدرجة ما بيبين، بنخفيه بدل حجم صفر
+    flight.visible = cur.s > 0.02;
+    flight.scale.setScalar(halfH * 2 * 0.3 * Math.max(cur.s, 0.02));
 
     // بيميل مع الحركة وباتجاه الماوس
     const pitch = cur.pitch - clamp(vy * 22, -24, 24) + Math.sin(t * 2.1 + 1) * 3 + mouse.sy * 6;

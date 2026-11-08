@@ -1,52 +1,55 @@
 @import "tailwindcss";
 
-/* ألوان Pearl Dental — مستوحاة من خطوط معجون الأسنان */
+/*
+ * ألوان Pearl Dental — من معجون الأسنان: أبيض، أزرق قوي، ولمسة زهري صغيرة.
+ * قاعدة: الأزرق للأفعال (أزرار، روابط)، والزهري نقطة تمييز بس، والباقي أبيض ورمادي.
+ */
 @theme {
-  --color-ink: #0b2545;
-  --color-muted: #4a6080;
-  --color-blue: #2d8cff;
-  --color-deep: #0f3d91;
-  --color-aqua: #7fd3ff;
-  --color-pink: #ff7eb3;
-  --color-blush: #ffe3ef;
-  --color-ice: #f4faff;
+  --color-paper: #f6f8f9;
+  --color-card: #ffffff;
+  --color-ink: #0f1d2b;
+  --color-muted: #5a6876;
+  --color-line: #e1e7ec;
+  --color-blue: #1f5fd6;
+  --color-blue-dark: #1849a6;
+  --color-sky: #e9f1fc;
+  --color-aqua: #dff0f6;
+  --color-pink: #e8588c;
+  --color-night: #0d1a2a;
+  --color-ok: #1f8a5b;
+  --color-warn: #b45309;
+  --color-error: #c2364a;
   --font-sans: "Alexandria Variable", system-ui, sans-serif;
-}
-
-:root {
-  --num: #cde4fb;
-  --num-dark: rgba(127, 211, 255, 0.42);
-  --pad: clamp(18px, 3.2vw, 46px);
-  --ease: cubic-bezier(0.2, 0.8, 0.15, 1);
+  --radius-card: 1.25rem;
 }
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
-  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  margin: 0;
   font-family: var(--font-sans);
   color: var(--color-ink);
-  background: var(--color-ice);
+  background: var(--color-paper);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+  text-rendering: optimizeLegibility;
 }
 
 :focus-visible {
   outline: 2px solid var(--color-blue);
-  outline-offset: 4px;
-  border-radius: 8px;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* العربي بيحتاج مسافة أسطر أكبر، وما بنضغط المسافة بين الحروف */
+[dir="rtl"] .tracking-tight {
+  letter-spacing: 0;
 }
 
 .skip-link {
@@ -64,140 +67,11 @@ a {
   top: 16px;
 }
 
-/* ---------------- الناف ---------------- */
-.nav {
-  position: fixed;
-  z-index: 30;
-  inset-inline: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  padding: 18px var(--pad) 0;
-  pointer-events: none;
-}
-.nav > * {
-  pointer-events: auto;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-inline-end: clamp(28px, 5vw, 66px);
-  font-weight: 700;
-  font-size: 17px;
-}
-.logo svg {
-  width: 38px;
-  height: 38px;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.logo:hover svg {
-  transform: rotate(-12deg) scale(1.06);
-}
-.nav__links {
-  display: flex;
-  gap: clamp(22px, 4vw, 52px);
-  font-size: 15.5px;
-}
-.nav__links a {
-  position: relative;
-}
-.nav__links a::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  bottom: -4px;
-  height: 1.5px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: var(--origin, left);
-  transition: transform 0.35s ease;
-}
-[dir="rtl"] .nav__links a::after {
-  --origin: right;
-}
-.nav__links a:hover::after {
-  transform: scaleX(1);
-}
-.nav__end {
-  margin-inline-start: auto;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.nav__lang {
-  display: grid;
-  place-items: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 10px;
-  border: 1.5px solid currentColor;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.3s, color 0.3s;
-}
-.nav__lang:hover {
-  background: var(--color-ink);
-  color: #fff;
-}
-.nav__cta {
-  padding: 10px 20px;
-  border-radius: 999px;
-  background: var(--color-blue);
-  color: #fff;
-  font-weight: 600;
-  font-size: 15px;
-  box-shadow: 0 10px 24px -10px rgba(45, 140, 255, 0.7);
-  transition: transform 0.25s ease, background 0.25s;
-}
-.nav__cta:hover {
-  transform: translateY(-2px);
-  background: #1d79ea;
-}
-.nav,
-.badge {
-  transition: color 0.5s ease;
-}
-.on-dark .nav,
-.on-dark .badge {
-  color: #fff;
-}
-.on-dark .nav__lang:hover {
-  background: #fff;
-  color: var(--color-ink);
-}
-
-/* ---------------- الشارة تحت ---------------- */
-.badge {
-  position: fixed;
-  z-index: 30;
-  inset-inline-end: var(--pad);
-  bottom: 22px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--color-muted);
-}
-.badge b {
-  font-weight: 700;
-  color: var(--color-blue);
-}
-.on-dark .badge b {
-  color: var(--color-aqua);
-}
-.badge svg {
-  width: 20px;
-  height: 20px;
-}
-
 /* ---------------- السن ---------------- */
 #tooth {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 15;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -208,477 +82,104 @@ a {
   opacity: 1;
 }
 
-/* ---------------- الأقسام ---------------- */
-.landing section {
-  position: relative;
-  height: max(100svh, 640px);
-  overflow: hidden;
-}
-.decor {
-  position: absolute;
-  pointer-events: none;
-  user-select: none;
-  will-change: transform;
-}
-.decor svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* بالعربي الرسومات اللي إلها اتجاه بتنعكس */
-[dir="rtl"] .decor--swirl svg,
-[dir="rtl"] .decor--brush svg {
-  transform: scaleX(-1);
-}
-
-/* الواجهة */
-.hero {
-  background: radial-gradient(55% 50% at 82% 18%, rgba(127, 211, 255, 0.5), transparent 70%),
-    radial-gradient(45% 45% at 12% 78%, rgba(255, 126, 179, 0.28), transparent 70%),
-    radial-gradient(40% 35% at 50% 60%, rgba(255, 255, 255, 0.9), transparent 70%),
-    linear-gradient(180deg, #e6f3ff 0%, #f4faff 100%);
-  z-index: 3;
-}
-.hero h1 {
-  position: absolute;
-  inset-inline: 0;
-  top: 15.5vh;
-  text-align: center;
-  font-weight: 800;
-  font-size: clamp(42px, 6.25vw, 112px);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  color: var(--color-ink);
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
-  will-change: transform;
-  z-index: 2;
-}
-/* الحروف العربية بتنكسر مع تقليل المسافة بين الحروف، وبدها سطر أطول */
-[dir="rtl"] .hero h1,
-[dir="rtl"] .title,
-[dir="rtl"] .num {
-  letter-spacing: 0;
-}
-[dir="rtl"] .hero h1 {
-  line-height: 1.3;
-}
-.hero h1 .line {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.08em;
-}
-.hero h1 .line > span {
-  display: inline-block;
-  transform: translateY(110%);
-}
-.hero h1 .accent {
-  background: linear-gradient(90deg, var(--color-blue), #8f7dff 55%, var(--color-pink));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.loaded .hero h1 .line > span {
-  animation: rise 1.1s var(--ease) forwards;
-}
-.hero h1 .line:nth-child(2) > span {
-  animation-delay: 0.12s;
-}
-@keyframes rise {
-  to {
-    transform: translateY(0);
-  }
-}
-.hero__side {
-  position: absolute;
-  inset-inline-end: clamp(24px, 6.5vw, 120px);
-  top: 59vh;
-  width: min(270px, 80vw);
-  z-index: 2;
-  opacity: 0;
-}
-.loaded .hero__side {
-  animation: fade 1s 0.7s ease forwards;
-}
-.hero__side p {
-  font-size: clamp(15px, 1.35vw, 19px);
-  line-height: 1.5;
-  color: var(--color-muted);
-}
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.join {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 32px;
-  font-weight: 600;
-  font-size: clamp(15px, 1.35vw, 19px);
-}
-.join i {
-  width: 26px;
-  height: 34px;
-  border: 1.8px solid currentColor;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  transition: transform 0.35s ease, background 0.35s, color 0.35s;
-}
-.join i svg {
-  width: 9px;
-  height: 9px;
-}
-[dir="rtl"] .join i svg {
-  transform: scaleX(-1);
-}
-.join:hover i {
-  transform: translateX(var(--nudge, 4px));
-  background: var(--color-ink);
-  color: #fff;
-}
-[dir="rtl"] .join:hover i {
-  --nudge: -4px;
-}
-.join--light:hover i {
-  background: #fff;
-  color: var(--color-deep);
-}
-.decor--swirl {
-  width: clamp(380px, 50vw, 900px);
-  inset-inline-start: -12vw;
-  bottom: -13vw;
-  transform-origin: 60% 40%;
-  filter: drop-shadow(0 30px 40px rgba(15, 61, 145, 0.16));
-  z-index: 1;
-}
-
-/* نصوص مشتركة */
-.num {
-  font-weight: 700;
-  line-height: 0.8;
-  letter-spacing: -0.06em;
-  font-size: clamp(110px, 15vw, 250px);
-  color: var(--num);
-}
-.title {
-  font-weight: 700;
-  font-size: clamp(30px, 3.4vw, 56px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-[dir="rtl"] .title {
-  line-height: 1.35;
-}
-.copy {
-  margin-top: 22px;
-  font-size: clamp(13.5px, 1.05vw, 16px);
-  line-height: 1.75;
-  color: var(--color-muted);
-  max-width: 440px;
-}
+/* ---------------- دخول العناصر ---------------- */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 1s ease, transform 1.1s var(--ease);
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s ease,
+    transform 1s cubic-bezier(0.2, 0.8, 0.15, 1);
+  transition-delay: var(--delay, 0ms);
 }
-.in .reveal {
+.in .reveal,
+.reveal.in {
   opacity: 1;
   transform: none;
 }
-.in .reveal.d1 {
-  transition-delay: 0.1s;
+
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
 }
-.in .reveal.d2 {
-  transition-delay: 0.22s;
+.hero-line > span {
+  display: inline-block;
+  transform: translateY(105%);
 }
-.in .reveal.d3 {
-  transition-delay: 0.34s;
+.loaded .hero-line > span {
+  animation: rise 1s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+}
+.hero-line:nth-child(2) > span {
+  animation-delay: 0.08s;
+}
+@keyframes rise {
+  to {
+    transform: none;
+  }
 }
 
-/* 01 الخدمات */
-.s1 {
-  background: radial-gradient(40% 40% at 90% 80%, rgba(255, 126, 179, 0.14), transparent 70%),
-    linear-gradient(180deg, #f4faff 0%, #eef7ff 100%);
-  z-index: 2;
+/* صورة الواجهة: بتنكشف من تحت لفوق */
+.wipe {
+  clip-path: inset(100% 0 0 0);
 }
-.decor--tube {
-  width: clamp(110px, 10vw, 190px);
-  inset-inline-start: 7vw;
-  top: 14vh;
-  transform-origin: 50% 0%;
-  filter: drop-shadow(0 30px 30px rgba(15, 61, 145, 0.18));
+.loaded .wipe {
+  animation: wipe 1.1s 0.15s cubic-bezier(0.65, 0, 0.25, 1) forwards;
 }
-.s1 .num {
-  position: absolute;
-  inset-inline-start: 6vw;
-  top: 70vh;
+@keyframes wipe {
+  to {
+    clip-path: inset(0);
+  }
 }
-.s1 .text {
-  position: absolute;
-  inset-inline-start: 50vw;
-  top: 24vh;
-  width: min(520px, 44vw);
-}
-.chips {
+
+/* ---------------- شريط الصور المتحرك ---------------- */
+.band-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 26px;
-  list-style: none;
-}
-.chips li {
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: #fff;
-  border: 1px solid #d6e9fb;
-  font-size: 14px;
-  font-weight: 500;
-  box-shadow: 0 6px 18px -12px rgba(15, 61, 145, 0.5);
-}
-.chips li:nth-child(odd) {
-  border-color: #ffd3e6;
-}
-
-/* 02 الحجز (غامق) */
-.s2 {
-  background: radial-gradient(38% 40% at 78% 72%, rgba(255, 126, 179, 0.38), transparent 70%),
-    radial-gradient(42% 42% at 22% 20%, rgba(127, 211, 255, 0.3), transparent 70%),
-    linear-gradient(160deg, #1150b8 0%, #0f3d91 45%, #0b2545 100%);
-  color: #fff;
-  z-index: 3;
-}
-.s2::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(var(--fade-dir, 90deg), rgba(6, 20, 50, 0.45) 0%, rgba(6, 20, 50, 0) 55%);
-}
-[dir="rtl"] .s2::before {
-  --fade-dir: 270deg;
-}
-.s2 .num {
-  color: var(--num-dark);
-  position: relative;
-}
-.s2 .text {
-  position: absolute;
-  inset-inline-start: 6vw;
-  top: 20vh;
-  width: min(500px, 46vw);
-}
-.s2 .title {
-  margin-top: 22px;
-}
-.s2 .copy {
-  color: rgba(234, 245, 255, 0.82);
-}
-.decor--bubbles {
-  width: clamp(380px, 46vw, 820px);
-  inset-inline-end: -6vw;
-  bottom: -14vw;
-  transform-origin: 30% 30%;
-  z-index: 2;
-}
-
-/* 03 الأطباء */
-.s3 {
-  background: radial-gradient(40% 40% at 15% 30%, rgba(127, 211, 255, 0.22), transparent 70%),
-    linear-gradient(180deg, #eef7ff 0%, #fff6fa 100%);
-  z-index: 1;
-}
-.decor--brush {
-  width: clamp(420px, 52vw, 900px);
-  inset-inline-start: -8vw;
-  top: 16vh;
-  transform-origin: 40% 50%;
-  filter: drop-shadow(0 30px 40px rgba(15, 61, 145, 0.18));
-}
-.s3 .text {
-  position: absolute;
-  inset-inline-start: 54vw;
-  top: 22vh;
-  width: min(500px, 40vw);
-}
-.s3 .title {
-  margin-top: 24px;
-}
-.stats {
-  display: flex;
-  gap: clamp(20px, 3vw, 44px);
-  margin-top: 30px;
-}
-.stats div {
-  display: flex;
-  flex-direction: column-reverse;
-}
-.stats dd {
-  font-size: clamp(28px, 2.6vw, 40px);
-  font-weight: 700;
-  color: var(--color-blue);
-  line-height: 1.1;
-}
-.stats dt {
-  font-size: 13px;
-  color: var(--color-muted);
-}
-
-/* التواصل */
-.foot {
-  background: linear-gradient(180deg, #fff6fa 0%, #f4faff 100%);
-  z-index: 1;
-}
-.foot .cta {
-  position: absolute;
-  left: 50%;
-  top: 16vh;
-  transform: translateX(-50%);
-  text-align: center;
+  gap: 12px;
   width: max-content;
-  max-width: 90vw;
-}
-.foot .cta .title {
-  font-size: clamp(30px, 3.6vw, 60px);
-}
-.foot .brand {
-  position: absolute;
-  inset-inline-start: var(--pad);
-  bottom: 80px;
-}
-.foot .brand strong {
-  display: block;
-  font-size: clamp(30px, 3vw, 46px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.foot .brand span {
-  font-size: 14px;
-  color: var(--color-muted);
-}
-.foot .cols {
-  position: absolute;
-  inset-inline-end: calc(var(--pad) + 120px);
-  bottom: 80px;
-  display: flex;
-  gap: 56px;
-  font-size: 14.5px;
-}
-.foot .cols h3 {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-blue);
-  margin-bottom: 8px;
-}
-.foot .cols a,
-.foot .cols p {
-  display: block;
-  line-height: 1.9;
-  font-weight: 500;
-}
-.foot .cols a:hover {
-  color: var(--color-blue);
+  will-change: transform;
 }
 
-/* ---------------- الموبايل ---------------- */
-@media (max-width: 760px) {
-  .nav__links,
-  .logo span {
-    display: none;
-  }
-  .nav__end {
-    gap: 10px;
-  }
-  .nav__cta {
-    padding: 9px 16px;
-    font-size: 14px;
-  }
-  .hero h1 {
-    top: 15vh;
-    padding-inline: 16px;
-  }
-  .hero__side {
-    top: auto;
-    bottom: 13vh;
-    inset-inline-end: 18px;
-    width: 62vw;
-  }
-  .decor--swirl {
-    width: 92vw;
-    inset-inline-start: -26vw;
-    bottom: -22vw;
-  }
-  .hero__side {
-    z-index: 3;
-  }
-  .decor--tube {
-    width: 78px;
-    top: 11vh;
-    inset-inline-start: 6vw;
-  }
-  .s1 .num {
-    top: 14vh;
-    inset-inline-start: auto;
-    inset-inline-end: 6vw;
-  }
-  .s1 .text,
-  .s3 .text {
-    inset-inline: 18px;
-    width: auto;
-    top: auto;
-    bottom: 9vh;
-  }
-  .s1 .copy {
-    display: none;
-  }
-  .s2 .text {
-    inset-inline: 18px;
-    width: auto;
-    top: 13vh;
-  }
-  .decor--brush {
-    width: 95vw;
-    top: 8vh;
-  }
-  .stats dd {
-    font-size: 26px;
-  }
-  .foot .cta {
-    top: 13vh;
-  }
-  .foot .cols {
-    inset-inline: 18px;
-    bottom: 76px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 16px;
-    font-size: 13.5px;
-  }
-  .foot .brand {
-    bottom: auto;
-    top: 55vh;
-    inset-inline-start: 18px;
-  }
-  .badge {
-    bottom: 16px;
-  }
+/* ---------------- كاروسيل الأطباء ---------------- */
+.doc-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--pad, 24px);
+  padding-inline: var(--pad, 24px);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+}
+.doc-track::-webkit-scrollbar {
+  display: none;
+}
+.doc-track.dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+.doc-track.dragging * {
+  pointer-events: none;
+}
+.doc-track > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero h1 .line > span,
-  .hero__side,
-  .reveal {
-    animation: none !important;
+  .reveal,
+  .hero-line > span,
+  .wipe {
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
+    animation: none !important;
     transition: none !important;
   }
   #tooth {
     transition: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
