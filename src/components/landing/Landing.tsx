@@ -207,7 +207,7 @@ function Hero({ lang, t, photos }: { lang: Locale; t: Dictionary; photos: Photos
       {/* 3) الكلمة بخط اليد — قدامها */}
       <p
         aria-hidden="true"
-        className="script-word cover-in pointer-events-none absolute end-[4%] top-[35%] z-[3] select-none whitespace-nowrap leading-none text-[#173f8c] sm:end-[22%] sm:top-[31%]"
+        className="script-word cover-in pointer-events-none absolute end-[4%] top-[27%] z-[3] select-none whitespace-nowrap leading-none text-[#0f2f73] [text-shadow:0_2px_18px_rgba(255,255,255,0.6)] sm:end-[22%] sm:top-[22%]"
         style={{ fontFamily: "var(--font-script)", fontSize: "clamp(54px, 9vw, 150px)", "--delay": "0.45s", "--from": "24px", rotate: "-7deg" } as React.CSSProperties}
       >
         {c.script}

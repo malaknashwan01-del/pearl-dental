@@ -208,7 +208,7 @@ export function createToothScene(canvas: HTMLCanvasElement, opts: ToothSceneOpti
   camera.position.set(0, 0, 10);
 
   // إضاءة: أبيض من فوق، وانعكاسات زرقا وزهرية زي خطوط المعجون
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xbfdcff, 1.1));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc3f0, 0.75));
   const key = new THREE.DirectionalLight(0xffffff, 2.2);
   key.position.set(3, 5, 6);
   const rimBlue = new THREE.DirectionalLight(0x2d8cff, 2.6);
@@ -227,7 +227,7 @@ export function createToothScene(canvas: HTMLCanvasElement, opts: ToothSceneOpti
 
   // مينا السن: أبيض لؤلؤي مع لمعة قوس قزح خفيفة
   const enamel = new THREE.MeshPhysicalMaterial({
-    color: 0xfbfdff,
+    color: 0xf2f6fb,
     roughness: 0.2,
     metalness: 0,
     clearcoat: 1,
@@ -244,6 +244,24 @@ export function createToothScene(canvas: HTMLCanvasElement, opts: ToothSceneOpti
   const toothGeometry = buildToothGeometry();
   const tooth = new THREE.Mesh(toothGeometry, enamel);
   spin.add(tooth);
+
+  // هالة زرقا فاتحة ورا السن — بتعطيه تباين على الخلفيات البيضا
+  const haloCanvas = document.createElement("canvas");
+  haloCanvas.width = haloCanvas.height = 256;
+  const hg = haloCanvas.getContext("2d")!;
+  const grad = hg.createRadialGradient(128, 128, 0, 128, 128, 128);
+  grad.addColorStop(0, "rgba(120,170,235,0.55)");
+  grad.addColorStop(0.45, "rgba(150,190,240,0.32)");
+  grad.addColorStop(1, "rgba(160,200,245,0)");
+  hg.fillStyle = grad;
+  hg.fillRect(0, 0, 256, 256);
+  const haloMap = new THREE.CanvasTexture(haloCanvas);
+  haloMap.colorSpace = THREE.SRGBColorSpace;
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloMap, transparent: true, depthWrite: false }));
+  halo.scale.setScalar(1.9);
+  halo.position.set(0, 0, -0.6);
+  halo.renderOrder = -1;
+  flight.add(halo);
 
   // فقاعات بتلف حوالين السن (بدل أجنحة النحلة)
   const bubbleGeometry = new THREE.SphereGeometry(1, 32, 24);
@@ -406,6 +424,8 @@ export function createToothScene(canvas: HTMLCanvasElement, opts: ToothSceneOpti
       bubbleGeometry.dispose();
       bubbleMaterial.dispose();
       sparkleMap.dispose();
+      haloMap.dispose();
+      halo.material.dispose();
       sparkles.forEach((s) => s.sprite.material.dispose());
       envTexture.dispose();
       pmrem.dispose();
